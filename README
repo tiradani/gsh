@@ -1,4 +1,4 @@
-gsh stands for "grid shell".  It is a wrapper around glodbus-job-run commands
+gsh stands for "grid shell".  It is a wrapper around globus-job-run commands
 that fakes a command line console for a remote gatekeeper.
 
 Prerequisites:
