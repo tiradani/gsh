@@ -1,0 +1,29 @@
+gsh stands for "grid shell".  It is a wrapper around glodbus-job-run commands
+that fakes a command line console for a remote gatekeeper.
+
+Prerequisites:
+
+* Linux Operating system.  So far only tested on SL5 and Fedora 16.
+
+* Python version 2.4 or greater
+
+* libxml2 and the python bindings for libxml2
+
+* Globus command line client tools.  Specifically, globusrun, globus-job-run and
+  globus-url-copy
+
+* valid credentials in place for remote gatekeeper access.  (e.g. run 
+  voms-proxy-init prior to starting gsh
+
+Basic usage:
+
+gsh [-v, --version] [remote gatekeeper fqdn]
+
+If you include the "-v" or "--version" arguments gsh will print its version and
+exit whether or not the remote gatekeeper fqdn is included.
+
+Generally, you'll want to start gsh with a gatekeeper fqdn, but gsh can be 
+started without one.  Once in the gsh shell, use "setsite" to set the gatekeeper
+fqdn.  "setsite" can also be used to switch gatekeeper fqdns.
+
+For more help, once in the gsh shell, run "help".
