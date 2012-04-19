@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Gsh by tiradani</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/tiradani/gsh">Fork On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/tiradani/gsh/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/tiradani/gsh/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Gsh</h1>
+          <p>gsh stands for &quot;grid shell&quot;.  It is a wrapper around glodbus-job-run commands that fakes a command line console for a remote globus gatekeeper.</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/tiradani">tiradani</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <p>gsh stands for "grid shell".  It is a wrapper around globus-job-run commands
+that fakes a command line console for a remote gatekeeper.</p>
+
+<p>Credits:</p>
+
+<p>The original concept using curses was written by Burt Holzman.</p>
+
+<p>Prerequisites:</p>
+
+<ul>
+<li><p>Linux Operating system.  So far only tested on SL5 and Fedora 16.</p></li>
+<li><p>Python version 2.4 or greater</p></li>
+<li><p>libxml2 and the python bindings for libxml2</p></li>
+<li><p>Globus command line client tools.  Specifically, globusrun, globus-job-run and
+globus-url-copy</p></li>
+<li><p>valid credentials in place for remote gatekeeper access.  (e.g. run 
+voms-proxy-init prior to starting gsh</p></li>
+</ul><p>Basic usage:</p>
+
+<p>gsh [-v, --version] [remote gatekeeper fqdn]</p>
+
+<p>If you include the "-v" or "--version" arguments gsh will print its version and
+exit whether or not the remote gatekeeper fqdn is included.</p>
+
+<p>Generally, you'll want to start gsh with a gatekeeper fqdn, but gsh can be 
+started without one.  Once in the gsh shell, use "setsite" to set the gatekeeper
+fqdn.  "setsite" can also be used to switch gatekeeper fqdns.</p>
+
+<p>For more help, once in the gsh shell, run "help".</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>
