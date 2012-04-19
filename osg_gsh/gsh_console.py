@@ -7,9 +7,9 @@ import shlex
 
 py_ver = platform.python_version_tuple()
 if int(py_ver[0]) == 2 and int(py_ver[1]) < 5:  # python version is 2.4.x
-    from process_management import call
+    from process_management import call, CalledProcessError
 else:
-    from subprocess import call
+    from subprocess import call, CalledProcessError
 
 
 from gsh_common import CommandHandler
@@ -148,26 +148,26 @@ class Console(cmd.Cmd):
 
         There can only be one...
         """
-        try:
+        if len(args) == 0:
+            print "setsite must follow the folowing format:  setsite <fqdn>"
+        else:
             old_site = self.site
             self.site = args
             globus_ping = buildGlobusPing(self.site)
-            ping_results = self.commandHandler.run(globus_ping)
             try:
-                # if the next line succeeds, then the ping failed so restore
-                # the old site
-                ping_results.index("fail")
-                print "You are not authorized to run at %s restoring the old" \
-                      " site setting." % self.site
-                self.site = old_site
-            except:
-                # the ping result shows a success so, set everything up for the
-                # new site
+                ping_results = self.commandHandler.run(globus_ping)
+                # the ping result succeeded so, set everything up for the new site
                 self.prompt = self.site + " " + self.suffix
                 self.site_env = {}
                 self.site_name = getSiteNameFromFQDN(self.site)
-        except:
-            print "setsite must follow the folowing format:  setsite <fqdn>"
+            except OSError, oe:
+                print "ERROR.  The globus client is not in the path."
+            except CalledProcessError, cpe:
+                # the ping failed so restore the old site
+                print "You are not authorized to run at %s restoring the old" \
+                      " site setting." % self.site
+                print cpe.output
+                self.site = old_site
 
     def do_getsite(self, args):
         """

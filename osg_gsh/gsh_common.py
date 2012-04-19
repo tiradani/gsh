@@ -1,6 +1,7 @@
 import sys
 import os
 import re
+import shlex
 import platform
 
 py_ver = platform.python_version_tuple()
@@ -53,8 +54,8 @@ class CommandHandler:
         return line
 
     def run(self, cmd):
-        return check_output(cmd, env=os.environ)
-    
+        return check_output(shlex.split(cmd), env=os.environ)
+
     def get_vdt_location(self):
         line = "echo $VDT_LOCATION"
         cmd = buildGlobusCommand(self.console.site, line)
