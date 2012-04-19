@@ -7,8 +7,12 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 %endif
 
+%define major 0
+%define minor 1
+%define patchlevel 0
+
 Name:               gsh
-Version:            0.0.1
+Version:            %{major}.%{minor}.%{patchlevel}
 Release:            0
 
 Summary:            gsh stands for "grid shell".
@@ -17,6 +21,14 @@ License:            Fermitools Software Legal Information (Modified BSD License)
 URL:                http://tiradani.github.com/gsh/
 BuildRoot:          %{_tmppath}/%{name}-buildroot
 BuildArchitectures: noarch
+
+Requires:           libxml2
+Requires:           libxml2-python
+Requires:           /usr/bin/globus-job-run
+Requires:           /usr/bin/globus-url-copy
+Requires:           /usr/bin/globusrun
+Requires:           /usr/bin/grid-proxy-init
+Requires:           /usr/bin/voms-proxy-init
 
 Source0:            gsh.tar.gz
 
@@ -44,6 +56,13 @@ cp -arp osg_gsh $RPM_BUILD_ROOT%{python_sitelib}
 install -d $RPM_BUILD_ROOT%{_bindir}
 install -m 0500 bin/gsh $RPM_BUILD_ROOT%{_bindir}/gsh
 
+# sync gsh version with the RPM version
+cat > $RPM_BUILD_ROOT%{python_sitelib}/osg_gsh/gsh_version.py << EOF
+MAJOR = %{major}
+MINOR = %{minor}
+PATCH = %{patchlevel}
+EOF
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -68,6 +87,6 @@ fi
 
 
 %changelog
-* Mon Mar 12 2012 Anthony Tiradani  0.0.1-3
+* Mon Mar 12 2012 Anthony Tiradani <anthony.tiradani@gmail.com> 0.1.0-0
 - Initial Version
 
