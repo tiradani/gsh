@@ -53,7 +53,7 @@ class Console(cmd.Cmd):
         """Pass command to a system shell when line begins with '!'"""
         if isinstance(args, types.StringType):
             args = shlex.split(args)
-        call(args)
+        call(args, env=os.environ)
 
     def do_help(self, args):
         """Get help on commands

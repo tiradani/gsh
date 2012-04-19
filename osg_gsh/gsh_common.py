@@ -53,7 +53,7 @@ class CommandHandler:
         return line
 
     def run(self, cmd):
-        return check_output(cmd)
+        return check_output(cmd, env=os.environ)
     
     def get_vdt_location(self):
         line = "echo $VDT_LOCATION"
