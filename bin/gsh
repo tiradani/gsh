@@ -32,5 +32,5 @@ if __name__ == '__main__':
     except:
         s = ""
 
-    console = Console(s, gsh_location)
+    console = Console(s)
     console.cmdloop()

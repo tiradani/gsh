@@ -5,9 +5,9 @@ import platform
 
 py_ver = platform.python_version_tuple()
 if int(py_ver[0]) == 2 and int(py_ver[1]) < 5:  # python version is 2.4.x
-    from process_management import call, check_call, check_output
+    from process_management import check_output
 else:
-    from subprocess import call, check_call, check_output
+    from subprocess import check_output
 
 from gsh_grid import buildGlobusCommand
 
@@ -17,7 +17,7 @@ def print_error(err):
 class CommandHandler:
     def __init__(self, console):
         self.console = console
-        
+
     def customCommand(self, line, workfile):
         if line.startswith("|"):
             # remove pipe and pass along to be executed
@@ -106,7 +106,7 @@ class CommandHandler:
             line = "!%s" % line
         elif is_first_path_local and not is_second_path_local:
             # local to remote copy
-            dict = {"server" : self.console.site,
+            path_dict = {"server" : self.console.site,
                     "remote_abs_path" : second_path,
                     "local_abs_path" : first_path
                     }
@@ -114,15 +114,15 @@ class CommandHandler:
             line = "!%s" % line
         elif not is_first_path_local and is_second_path_local:
             # remote to local copy
-            dict = {"server" : self.console.site,
+            path_dict = {"server" : self.console.site,
                     "remote_abs_path" : first_path,
                     "local_abs_path" : second_path
                     }
-            line = remote_to_local % dict
+            line = remote_to_local % path_dict
             line = "!%s" % line
         elif not is_first_path_local and not is_second_path_local:
             # remote to remote copy
-            line = buildGlobusCommand(line)
+            line = buildGlobusCommand(self.console.site, line)
             print self.run(line)
             line = ""
         else:
@@ -133,7 +133,7 @@ class CommandHandler:
     
     def parse_cd(self, line):
         line += "; echo $PWD"
-        cmd = buildGlobusCommand(line)
+        cmd = buildGlobusCommand(self.console.site, line)
         result = self.run(cmd)
         print result 
         if len(result.strip().split("\n")) == 1:
@@ -147,7 +147,7 @@ class CommandHandler:
             val = self.console.get_env(var2)
         except:
             if len(val.strip()) <= 0:
-                cmd = buildGlobusCommand("echo " + var)
+                cmd = buildGlobusCommand(self.console.site, "echo %s" % var2)
                 val = self.run(cmd).replace("\n","")
                 self.console.set_env(var2, val)
         return val

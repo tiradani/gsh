@@ -7,9 +7,9 @@ import shlex
 
 py_ver = platform.python_version_tuple()
 if int(py_ver[0]) == 2 and int(py_ver[1]) < 5:  # python version is 2.4.x
-    from process_management import call, check_call, check_output
+    from process_management import call
 else:
-    from subprocess import call, check_call, check_output
+    from subprocess import call
 
 
 from gsh_common import CommandHandler
@@ -17,7 +17,7 @@ from gsh_grid import getSiteNameFromFQDN, buildGlobusPing
 import gsh_version
 
 class Console(cmd.Cmd):
-    def __init__(self, site, gsh_location):
+    def __init__(self, site):
         cmd.Cmd.__init__(self)
         self.suffix = "=>> "
         self.intro  = "Welcome to gsh! "
