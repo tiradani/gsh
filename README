@@ -1,6 +1,10 @@
 gsh stands for "grid shell".  It is a wrapper around globus-job-run commands
 that fakes a command line console for a remote gatekeeper.
 
+Credits:
+
+The original concept using curses was written by Burt Holzman.
+
 Prerequisites:
 
 * Linux Operating system.  So far only tested on SL5 and Fedora 16.

@@ -13,7 +13,7 @@ else:
 
 
 from gsh_common import CommandHandler
-from gsh_grid import getSiteNameFromFQDN, buildGlobusPing, dump_bdii
+from gsh_grid import getSiteNameFromFQDN, buildGlobusPing
 import gsh_version
 
 class Console(cmd.Cmd):
