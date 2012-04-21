@@ -17,12 +17,27 @@ myosg_url = "http://myosg.grid.iu.edu/rgsummary/xml?datasource=summary&" \
              "all_resources=on&gridtype=on&gridtype_1=on&gridtype_2=on&" \
              "active_value=1&disable_value=1"
 
-def buildGlobusCommand(site, line):
-    #preamble = '/bin/bash -c \'cd $OSG_LOCATION; source setup.sh; '
-    preamble = '/bin/bash -c \'if [ "x$OSG_LOCATION" != "x" ]; then cd $OSG_LOCATION; source setup.sh; fi; '
+def buildGlobusCommand(site, line, env, cwd):
+    preamble = '/bin/bash -c \'if [ "x$OSG_LOCATION" != "x" ]; then cd $OSG_LOCATION; source setup.sh; fi;'
     postamble = '\''
 
-    return 'globus-job-run ' + site + " " + preamble + line + postamble
+    exports = ""
+    for key in env.keys():
+        exports += "export %s=%s; " % (key, env[key])
+
+    cd_cmd = ""
+    if cwd:
+        cwd = "/".join(cwd)
+        cd_cmd = "cd %s;" % cwd
+
+    command = 'globus-job-run %(site)s %(preamble)s %(exports)s %(cd)s %(line)s %(postamble)s'
+    command = command % {"site" : site,
+                         "preamble" : preamble,
+                         "postamble" : postamble,
+                         "exports" : exports,
+                         "cd": cd_cmd,
+                         "line": line}
+    return command
 
 def buildGlobusCopy(site, remote_path, local_path):
     return 'globus-url-copy -r gsiftp://' + site + "/" + remote_path + " " + local_path
@@ -35,7 +50,7 @@ def getSiteNameFromFQDN(site_fqdn):
     try:
         myosg_xml = urllib.urlopen(myosg_url).read()
         xml_summary = libxml2.parseDoc(myosg_xml)
-        
+
         for resource in xml_summary.xpathEval('//ResourceGroup/Resources/Resource'):
             xml_fqdn = resource.xpathEval('FQDN')[0].content
             if xml_fqdn == site_fqdn:

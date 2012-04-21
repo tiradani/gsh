@@ -20,10 +20,10 @@ class Console(cmd.Cmd):
     def __init__(self, site):
         cmd.Cmd.__init__(self)
         self.suffix = "=>> "
-        self.intro  = "Welcome to gsh! "
+        self.intro = "Welcome to gsh! "
 
         self.prompt = site + " " + self.suffix
-        self.keywords = ["!", "hist", "exit", "help", "setsite", "getsite", 
+        self.keywords = ["!", "hist", "exit", "help", "setsite", "getsite",
                          "EOF", "vdt_location", "version"]
         self.home = os.environ['HOME']
         self.history = "%s/.gsh_history" % self.home
@@ -34,12 +34,18 @@ class Console(cmd.Cmd):
 
         # site specific variables
         self.site_env = {}
-        self.site_env["PWD"] = ""
 
         self.site = site
         self.site_name = getSiteNameFromFQDN(self.site)
         # register command handler
         self.commandHandler = CommandHandler(self)
+
+        pwd = self.commandHandler.get_pwd(empty_cwd=True)
+        self.cwd = pwd.split("/")
+
+    def set_cwd(self, path):
+        self.cwd = path.split("/")
+        self.prompt = "%s %s %s" % (self.site, self.cwd[-1], self.suffix)
 
     ## Command definitions to support Cmd object functionality ##
     def do_EOF(self, args):
@@ -75,7 +81,7 @@ class Console(cmd.Cmd):
         f.close()
         self._hist = [a[:-1] for a in hist]
         readline.read_history_file(self.history)
-        self._locals  = {}      ## Initialize execution namespace for user
+        self._locals = {}      ## Initialize execution namespace for user
         self._globals = {}
 
     def postloop(self):
@@ -124,7 +130,17 @@ class Console(cmd.Cmd):
         return self.site_env[var]
 
     def set_env(self, var, val):
-        self.site_env[var] = val
+        if val:
+            self.site_env[var] = val
+        else:
+            # if empty val is passed we will clear it out of the env
+            try:
+                self.site_env.pop(var)
+            except:
+                # var didn't exist, but since were were clearing it anyway
+                # we don't care, doing it this way, so that there is only one
+                # hash table lookup instead of two.
+                pass
 
     ## Command definitions ##
     def do_hist(self, args):
@@ -155,7 +171,7 @@ class Console(cmd.Cmd):
             self.site = args
             globus_ping = buildGlobusPing(self.site)
             try:
-                ping_results = self.commandHandler.run(globus_ping)
+                _ = self.commandHandler.run(globus_ping)
                 # the ping result succeeded so, set everything up for the new site
                 self.prompt = self.site + " " + self.suffix
                 self.site_env = {}
