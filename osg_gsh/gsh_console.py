@@ -42,9 +42,19 @@ class Console(cmd.Cmd):
 
         pwd = self.commandHandler.get_pwd(empty_cwd=True)
         self.cwd = pwd.split("/")
+        self.old_cwd = None
 
     def set_cwd(self, path):
-        self.cwd = path.split("/")
+        if path == "-":
+            if self.old_cwd:
+                temp_cwd = self.old_cwd
+                self.old_cwd = self.cwd
+                self.cwd = temp_cwd
+            else:
+                print "Nothing to be done.  You haven't switched directories yet."
+        else:
+            self.old_cwd = self.cwd
+            self.cwd = path.split("/")
         self.prompt = "%s %s %s" % (self.site, self.cwd[-1], self.suffix)
 
     ## Command definitions to support Cmd object functionality ##

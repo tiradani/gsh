@@ -29,21 +29,21 @@ class CommandHandler:
             if not line.startswith("!"):
                 try:
                     line = line.strip()
-                    if line.startswith("less "):
+                    if line.startswith("less"):
                         remote_path = line.split()[1]
                         self.cacheData(remote_path, workfile)
                         line = "!less " + workfile
-                    if line.startswith("vim "):
+                    if line.startswith("vim"):
                         remote_path = line.split()[1]
                         self.cacheData(remote_path, workfile)
                         line = "!vim " + workfile
-                    if line.startswith("emacs "):
+                    if line.startswith("emacs"):
                         remote_path = line.split()[1]
                         self.cacheData(remote_path, workfile)
                         line = "!emacs " + workfile
-                    if line.startswith("cp "):
+                    if line.startswith("cp"):
                         line = self.parse_cp(line)
-                    if line.startswith("cd "):
+                    if line.startswith("cd"):
                         self.parse_cd(line)
                         line = ""
                     if line.startswith("export "):
@@ -158,26 +158,32 @@ class CommandHandler:
 
         # remove "cd " from the line
         path = line[2:].strip()
-        if path.startswith("/"):
-            is_relative = False
+        if len(path) > 0:
+            if path.startswith("/") or path.startswith("~") or path.startswith("-"):
+                is_relative = False
+            else:
+                is_relative = True
+
+            if is_relative:
+                path = "%s/%s" % (cwd, path)
+
+            # this is an absolute path
+            try:
+                if path == "-":
+                    new_cwd = "-"
+                else:
+                    new_cwd = self.check_path(path)
+                self.console.set_cwd(new_cwd)
+            except GSHErrorEmptyPath:
+                print "Empty path specified."
+            except GSHErrorNotDirectory:
+                print "Not a directory.  Cannot cd to %s" % path
+            except GSHErrorDoesNotExist:
+                print "%s does not exist." % path
+            except GSHErrorGeneric, gsh_g:
+                print "Unknown Error occured.  Output: \n%s" % gsh_g
         else:
-            is_relative = True
-
-        if is_relative:
-            path = "%s/%s" % (cwd, path)
-
-        # this is an absolute path
-        try:
-            new_cwd = self.check_path(path)
-            self.console.set_cwd(new_cwd)
-        except GSHErrorEmptyPath:
-            print "Empty path specified."
-        except GSHErrorNotDirectory:
-            print "Not a directory.  Cannot cd to %s" % path
-        except GSHErrorDoesNotExist:
-            print "%s does not exist." % path
-        except GSHErrorGeneric, gsh_g:
-            print "Unknown Error occured.  Output: \n%s" % gsh_g
+            print "No path specified"
 
     def check_path(self, path):
         if path:
