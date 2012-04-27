@@ -5,12 +5,14 @@ import readline
 import platform
 import shlex
 
+# Check to see if we are being called from python 2.5.x or greater.  If not,
+# import our own subprocess convenience functions.  These functions were 
+# introduced in python 2.5
 py_ver = platform.python_version_tuple()
 if int(py_ver[0]) == 2 and int(py_ver[1]) < 5:  # python version is 2.4.x
     from process_management import call, CalledProcessError
 else:
     from subprocess import call, CalledProcessError
-
 
 from gsh_common import CommandHandler
 from gsh_grid import getSiteNameFromFQDN, buildGlobusPing
@@ -45,6 +47,7 @@ class Console(cmd.Cmd):
         self.old_cwd = None
 
     def set_cwd(self, path):
+        """Set the current working directory and the "old" current working directory"""
         if path == "-":
             if self.old_cwd:
                 temp_cwd = self.old_cwd
@@ -137,9 +140,15 @@ class Console(cmd.Cmd):
             print e.__class__, ":", e
 
     def get_env(self, var):
+        """Returns the value for the specified custom environment variable"""
         return self.site_env[var]
 
     def set_env(self, var, val):
+        """
+        Set a custom environment variable to the specified value.  All collected
+        environment variables will be exported on the remote gatekeeper prior to
+        executing the user command line.
+        """
         if val:
             self.site_env[var] = val
         else:
