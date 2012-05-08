@@ -3,6 +3,7 @@
 import os
 import sys
 import re
+from optparse import OptionParser
 
 try: 
     import osg_gsh
@@ -14,22 +15,31 @@ from osg_gsh.gsh_console import Console
 from osg_gsh import gsh_version
 
 if __name__ == '__main__':
-    try:
-        if ("-v" in sys.argv) or ("--version" in sys.argv):
-            # print the version and exit
-            print "%s.%s.%s" % (gsh_version.MAJOR, 
-                                gsh_version.MINOR, 
-                                gsh_version.PATCH)
-            sys.exit(0)
-        # validate hostname - we are going to ignore anything other than the
-        # first argument 
-        s = sys.argv[1]
+
+    usage = "usage: %prog [options] [Site FQDN]"
+    parser = OptionParser(usage=usage)
+    parser.add_option("-v", "--version", action="store_true", dest="version", 
+                      default=False, help="Report the version of gsh and exit")
+
+    (options, args) = parser.parse_args()
+
+    if options.version:
+        # print the version and exit
+        print "%s.%s.%s" % (gsh_version.MAJOR,
+                            gsh_version.MINOR,
+                            gsh_version.PATCH)
+        sys.exit(0)
+
+    # validate hostname - we are going to ignore anything other than the
+    # first argument
+    if args:
+        site_fqdn = args[1]
         allowed = re.compile("(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
-        for x in s.split("."):
+        for x in site_fqdn.split("."):
             if not allowed.match(x):
                 print "Invalid hostname for remote gatekeeper."
                 sys.exit(1)
-    except:
+    else:
         s = ""
 
     console = Console(s)
