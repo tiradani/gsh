@@ -63,6 +63,10 @@ MINOR = %{minor}
 PATCH = %{patchlevel}
 EOF
 
+# install man page
+install -g 0 -o 0 -m 0644 man/gsh.1 $RPM_BUILD_ROOT%{_mandir}/man1/
+gzip $RPM_BUILD_ROOT%{_mandir}/man1/gsh.1
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -84,6 +88,7 @@ fi
 %defattr(-,root,root,-)
 %attr(755,root,root) %{_bindir}/gsh
 %attr(755,root,root) %{python_sitelib}/osg_gsh
+%attr(0644,root,root) %{_mandir}/man1/gsh.1*
 
 %doc README LICENSE
 
