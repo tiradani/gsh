@@ -13,7 +13,7 @@
 
 Name:               gsh
 Version:            %{major}.%{minor}.%{patchlevel}
-Release:            0
+Release:            1%{?dist}
 
 Summary:            gsh stands for "grid shell".
 Group:              System Environment/Daemons
@@ -85,6 +85,7 @@ fi
 %attr(755,root,root) %{_bindir}/gsh
 %attr(755,root,root) %{python_sitelib}/osg_gsh
 
+%doc README LICENSE
 
 %changelog
 * Mon Mar 12 2012 Anthony Tiradani <anthony.tiradani@gmail.com> 0.1.0-0
