@@ -8,14 +8,14 @@
 %endif
 
 %define major 0
-%define minor 1
+%define minor 2
 %define patchlevel 0
 
-Name:               gsh
+Name:               gridsh
 Version:            %{major}.%{minor}.%{patchlevel}
 Release:            1%{?dist}
 
-Summary:            gsh stands for "grid shell".
+Summary:            gridsh is a grid shell for grid sites running a fork jobmanager.
 Group:              System Environment/Daemons
 License:            Fermitools Software Legal Information (Modified BSD License)
 URL:                http://tiradani.github.com/gsh/
@@ -33,7 +33,7 @@ Requires:           /usr/bin/voms-proxy-init
 Source0:            gsh.tar.gz
 
 %description
-gsh stands for "grid shell".  It is a wrapper around glodbus-job-run commands 
+gridsh stands for "grid shell".  It is a wrapper around glodbus-job-run commands
 that fakes a command line console for a remote gatekeeper.
 
 %prep
@@ -54,7 +54,7 @@ cp -arp osg_gsh $RPM_BUILD_ROOT%{python_sitelib}
 
 # install the executables
 install -d $RPM_BUILD_ROOT%{_bindir}
-install -m 0500 bin/gsh $RPM_BUILD_ROOT%{_bindir}/gsh
+install -m 0500 bin/gsh $RPM_BUILD_ROOT%{_bindir}/gridsh
 
 # sync gsh version with the RPM version
 cat > $RPM_BUILD_ROOT%{python_sitelib}/osg_gsh/gsh_version.py << EOF
@@ -64,8 +64,8 @@ PATCH = %{patchlevel}
 EOF
 
 # install man page
-install -g 0 -o 0 -m 0644 man/gsh.1 $RPM_BUILD_ROOT%{_mandir}/man1/
-gzip $RPM_BUILD_ROOT%{_mandir}/man1/gsh.1
+install -g 0 -o 0 -m 0644 man/gsh.1 $RPM_BUILD_ROOT%{_mandir}/man1/gridsh.1
+gzip $RPM_BUILD_ROOT%{_mandir}/man1/gridsh.1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -93,6 +93,11 @@ fi
 %doc README LICENSE
 
 %changelog
+* Mon Aug 20 2012 Anthony Tiradani <anthony.tiradani@gmail.com> 0.2.0-0
+- rename the rpm package from gsh to gridsh to avoid collisions with a new rpm
+  available in EPEL
+- rename gsh to gridsh in the install procedure
+- rename gsh.1 man page to gridsh.1 in the install procedure
 * Mon Mar 12 2012 Anthony Tiradani <anthony.tiradani@gmail.com> 0.1.0-0
 - Initial Version
 
