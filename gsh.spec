@@ -30,7 +30,7 @@ Requires:           /usr/bin/globusrun
 Requires:           /usr/bin/grid-proxy-init
 Requires:           /usr/bin/voms-proxy-init
 
-Source0:            gsh.tar.gz
+Source0:            gsh-%{major}.%{minor}.tar.gz
 
 %description
 gridsh stands for "grid shell".  It is a wrapper around glodbus-job-run commands
@@ -64,7 +64,8 @@ PATCH = %{patchlevel}
 EOF
 
 # install man page
-install -g 0 -o 0 -m 0644 man/gsh.1 $RPM_BUILD_ROOT%{_mandir}/man1/gridsh.1
+install -d $RPM_BUILD_ROOT%{_mandir}/man1
+install -m 0644 man/gsh.1 $RPM_BUILD_ROOT%{_mandir}/man1/gridsh.1
 gzip $RPM_BUILD_ROOT%{_mandir}/man1/gridsh.1
 
 %clean
@@ -86,9 +87,9 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%attr(755,root,root) %{_bindir}/gsh
+%attr(755,root,root) %{_bindir}/gridsh
 %attr(755,root,root) %{python_sitelib}/osg_gsh
-%attr(0644,root,root) %{_mandir}/man1/gsh.1*
+%attr(0644,root,root) %{_mandir}/man1/gridsh.1*
 
 %doc README LICENSE
 
