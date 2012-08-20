@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
     usage = "usage: %prog [options] [Site FQDN]"
     parser = OptionParser(usage=usage)
-    parser.add_option("-v", "--version", action="store_true", dest="version", 
+    parser.add_option("-v", "--version", action="store_true", dest="version",
                       default=False, help="Report the version of gsh and exit")
 
     (options, args) = parser.parse_args()
@@ -39,8 +39,7 @@ if __name__ == '__main__':
             if not allowed.match(x):
                 print "Invalid hostname for remote gatekeeper."
                 sys.exit(1)
+        console = Console(s)
+        console.cmdloop()
     else:
-        s = ""
-
-    console = Console(s)
-    console.cmdloop()
+        parser.print_help()
