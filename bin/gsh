@@ -33,13 +33,13 @@ if __name__ == '__main__':
     # validate hostname - we are going to ignore anything other than the
     # first argument
     if args:
-        site_fqdn = args[1]
+        site_fqdn = args[0]
         allowed = re.compile("(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
         for x in site_fqdn.split("."):
             if not allowed.match(x):
                 print "Invalid hostname for remote gatekeeper."
                 sys.exit(1)
-        console = Console(s)
+        console = Console(site_fqdn)
         console.cmdloop()
     else:
         parser.print_help()
